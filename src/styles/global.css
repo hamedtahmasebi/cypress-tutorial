@@ -1,0 +1,19 @@
+* {
+    list-style-type: none;
+}
+input {
+    outline: none;
+}
+
+.completed {
+    color: gray;
+    text-decoration: line-through;
+}
+
+.delete-btn {
+    display: none;
+}
+
+#todo-list li:hover button {
+    display: block;
+}
