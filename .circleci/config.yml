@@ -6,38 +6,45 @@ version: 2.1
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 
 jobs:
-  run-tests:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
-    docker:
-      - image: cypress/base:10
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - v1-deps-{{ .Branch }}-{{ checksum "package.json" }}
-            - v1-deps-{{ .Branch }}
-            - v1-deps
-      - run:
-          name: Install Dependencies
-          command: npm ci
-      - save_cache:
-          key: v1-deps-{{ .Branch }}-{{ checksum "package.json" }}
-          # cache NPM modules and the folder with the Cypress binary
-          paths:
-            - ~/.npm
-            - ~/.cache
-      - run: 
-          name: Start app
-          command: "npm start"
-          background: true
-      - run: $(npm bin)/cypress run
-
+    # run-tests:
+    #   # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    #   # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+    #   docker:
+    #     - image: cypress/base:10
+    #   # Add steps to the job
+    #   # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+    #   steps:
+    #     - checkout
+    #     - restore_cache:
+    #         keys:
+    #           - v1-deps-{{ .Branch }}-{{ checksum "package.json" }}
+    #           - v1-deps-{{ .Branch }}
+    #           - v1-deps
+    #     - run:
+    #         name: Install Dependencies
+    #         command: npm ci
+    #     - save_cache:
+    #         key: v1-deps-{{ .Branch }}-{{ checksum "package.json" }}
+    #         # cache NPM modules and the folder with the Cypress binary
+    #         paths:
+    #           - ~/.npm
+    #           - ~/.cache
+    #     - run:
+    #         name: Start app
+    #         command: "npm start"
+    #         background: true
+    #     - run: $(npm bin)/cypress run
+    - unit-tests:
+          docker:
+              - image: circleci/node:9.9.0
+          steps:
+              - checkout
+              - run:
+                name: "run unit tests"
+                command: "npm run test"
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  say-hello-workflow:
-    jobs:
-      - run-tests
+    say-hello-workflow:
+        jobs:
+            - unit-tests
