@@ -22,6 +22,7 @@ jobs:
       - run:
           name: npm start
           command: npm run start
+          background: true
   unit-tests:
     docker:
       - image: cimg/node:lts
@@ -44,6 +45,8 @@ workflows:
     jobs:
       - unit-tests
       - npm-start
+      - cypress/install
       - cypress/run:
           requires:
             - npm-start
+            - cypress/install
