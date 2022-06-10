@@ -1,9 +1,13 @@
 ---
 version: 2.1
+
+orbs: 
+  cypress: cypress-io/cypress@1
+
 jobs:
   unit-tests:
     docker:
-      - image: circleci/node:9.9.0
+      - image: cimg/node:lts
     steps:
       - checkout
       - restore_cache:
