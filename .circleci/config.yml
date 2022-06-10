@@ -3,9 +3,24 @@ version: 2.1
 orbs: 
   cypress: cypress-io/cypress@2.0.0
 
+jobs:
+  deploy-to-netlify:
+    docker:
+      - image: cimg/node:lts
+    steps:
+      - run:
+         name: deploy
+         command: curl -X POST -d {} ${trigger_deploy}
+
 workflows:
   build:
     jobs:
       - cypress/run:
           start: npm start
           wait-on: 'http://localhost:3000'
+      - hold:
+          type: approval
+      - deploy-to-netlify:
+          requires:
+            - hold
+            - cypress/run
