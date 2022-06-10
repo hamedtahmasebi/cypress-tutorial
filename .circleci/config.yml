@@ -1,7 +1,15 @@
 ---
 version: 2.1
 
+orbs: 
+  cypress: cypress-io/cypress@2.0.0
+
 jobs:
+  npm-start:
+    docker: cimg/node:lts
+  steps:
+    - checkout
+    - run: npm run start
   unit-tests:
     docker:
       - image: cimg/node:lts
@@ -23,3 +31,4 @@ workflows:
   say-hello-workflow:
     jobs:
       - unit-tests
+      - cypress/run:
