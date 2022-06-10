@@ -5,6 +5,37 @@ orbs:
   cypress: cypress-io/cypress@2.0.0
 
 jobs:
+  e2e:
+    docker:
+      - image: cypress/browsers:node11.13.0-chrome73
+        environment:
+          TERM: xterm
+    steps:
+      - checkout
+      - restore_cache:
+          key: e2e-cache-{{ checksum "package.json" }}
+      - run:
+          name: install ci dependencies
+          command: npm ci
+      - save_cache:
+          key: e2e-cache-{{ checksum "package.json" }}
+          paths:
+            - ~/.npm
+            - ~/.cache
+      - run:
+          name: Launch server
+          command: npm run start
+          background: true
+      - run:
+          name: Run E2E tests
+          command: npx cypress run
+      - store_test_results:
+          path: results
+      - store_artifacts:
+          path: cypress/videos
+      - store_artifacts:
+          path: cypress/screenshots
+
   npm-start:
     docker:
       - image: cimg/node:lts
@@ -45,8 +76,6 @@ workflows:
     jobs:
       - unit-tests
       - npm-start
-      - cypress/install
-      - cypress/run:
-          requires:
+      - e2e:
+          requires: 
             - npm-start
-            - cypress/install
