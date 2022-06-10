@@ -5,6 +5,14 @@ orbs:
   cypress: cypress-io/cypress@2.0.0
 
 jobs:
+  npm-start:
+    docker:
+      - image: cimg/node:lts
+    steps:
+      - checkout
+      - run:
+          command: npm run start
+          name: npm start
   unit-tests:
     docker:
       - image: cimg/node:lts
@@ -26,4 +34,7 @@ workflows:
   say-hello-workflow:
     jobs:
       - unit-tests
-      - cypress/run
+      - npm-start
+      - cypress/run:
+          requires:
+            - npm-start
