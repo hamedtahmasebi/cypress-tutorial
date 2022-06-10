@@ -10,9 +10,18 @@ jobs:
       - image: cimg/node:lts
     steps:
       - checkout
+      - restore_cache:
+          key: v1-deps-{{ checksum "package-lock.json" }}
       - run:
-          command: npm run start
+          name: install dependencies
+          command: npm install
+      - save_cache:
+          key: v1-deps-{{ checksum "package-lock.json" }}
+          paths:
+          - node_modules
+      - run:
           name: npm start
+          command: npm run start
   unit-tests:
     docker:
       - image: cimg/node:lts
