@@ -19,7 +19,7 @@ const TodoForm = ({ addTodo }) => {
             onSubmit={(e) => checkAndAddTodo(e)}
         >
             <h1>Todo</h1>
-            <h2>Hey!!!</h2>
+            <h2>Hey!!!!</h2>
             <div className="bg-white border rounded">
                 <input
                     id="new-todo"
